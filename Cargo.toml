@@ -1,0 +1,14 @@
+[package]
+name = "snyk"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio-core = "0.1.17"
+serde = "1.0.90"
+serde_json = "1.0.39"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+http = "0.2.6"
+tokio = { version = "1", features = ["full"] }
