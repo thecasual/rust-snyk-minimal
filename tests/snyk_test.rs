@@ -7,6 +7,7 @@ use std::fs;
 async fn get_test() {
     let snykToken =  fs::read_to_string(".secret").unwrap();
     let client = RestClient { token:snykToken};
-    client.get_me().await;
+    let out = client.get_me().await;
+    print!("{}", out);
     print!("Complete");
 }

@@ -1,7 +1,7 @@
 
 use reqwest;
 use serde_json::{self, Value};
-use std::collections::HashMap;
+//use serde_json::{self, Value, json};
 
 static SNYK_BASE_URL: &str = "https://api.snyk.io/api/v1";
 
@@ -9,12 +9,12 @@ pub struct RestClient {
     pub token: String
 }
 
-struct Header { 
-    
+pub struct SnykOrganzations {
+    organizations: [String]
 }
 
 impl RestClient {
-    pub async fn get_me(self){
+    pub async fn get_me(&self) -> Value {
         let url = format!("{}/user/me", SNYK_BASE_URL);
         let client = reqwest::Client::new();
         let res = client.get(url)
@@ -22,12 +22,14 @@ impl RestClient {
         .send()
         .await
         .unwrap()
-        .text()
-        .await;
-        
-    }
+        .json::<Value>()
+        .await
+        .unwrap();
 
-    pub fn new(token: String) -> Self {
-         Self { token } 
+        res
+
+        //let orgs = SnykOrganzations{ res["orgs"]};
+        //orgs
+        
     }
 }
