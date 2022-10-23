@@ -1,7 +1,7 @@
-
 use reqwest;
-use serde_json::{self, Value};
-//use serde_json::{self, Value, json};
+use serde_derive::Deserialize;
+use serde_derive::Serialize;
+use serde_json::Value;
 
 static SNYK_BASE_URL: &str = "https://api.snyk.io/api/v1";
 
@@ -14,22 +14,41 @@ pub struct SnykOrganzations {
 }
 
 impl RestClient {
-    pub async fn get_me(&self) -> Value {
+    pub async fn get_me(&self) -> Result<SnykMe, reqwest::Error> {
         let url = format!("{}/user/me", SNYK_BASE_URL);
         let client = reqwest::Client::new();
-        let res = client.get(url)
+        let res: _ = client.get(url)
         .header("Authorization", format!("token {}", self.token))
         .send()
         .await
         .unwrap()
-        .json::<Value>()
-        .await
-        .unwrap();
-
+        .json::<SnykMe>()
+        .await;
         res
-
-        //let orgs = SnykOrganzations{ res["orgs"]};
-        //orgs
         
     }
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SnykMe {
+    pub email: Value,
+    pub id: String,
+    pub orgs: Vec<Org>,
+    pub username: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Org {
+    pub group: Group,
+    pub id: String,
+    pub name: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Group {
+    pub id: String,
+    pub name: String,
 }
